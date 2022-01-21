@@ -42,6 +42,9 @@ Forget about manual x, y calculations. Declare document structure and let pdfmak
 - Windows 11, 10, 8, 7
 - .NET v4.6.2 and newer
 
+### AnyScreen support
+- yes
+
 ### Contacts
 - <mikeduglas@yandex.ru>
 - <mikeduglas66@gmail.com>
