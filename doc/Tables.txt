@@ -1,0 +1,50 @@
+Tables
+
+Conceptually tables are similar to columns. They can however have headers, borders and cells spanning over multiple columns/rows.
+
+dd   TDocDefinition
+  dd.BeginContent()
+   dd.AddContentProperty('layout', '"lightHorizontalLines"')  ! optional
+
+   ! headers are automatically repeated if the table spans over multiple pages
+   ! you can declare how many rows should be treated as headers
+   dd.BeginTable('"headerRows": 1, "widths": [ "*", "auto", 100, "*" ]')
+
+    dd.BeginRow()
+     dd.AddText('First'); dd.AddText('Second'); dd.AddText('Third'); dd.AddText('The last one')
+    dd.EndRow()
+
+    dd.BeginRow()
+     dd.AddText('Value 1'); dd.AddText('Value 2'); dd.AddText('Value 3'); dd.AddText('Value 4')
+    dd.EndRow()
+
+    dd.BeginRow()
+     dd.AddText('Bold value', '"bold": true'); dd.AddText('Val 2'); dd.AddText('Val 3'); dd.AddText('Val 4')
+    dd.EndRow()
+
+   dd.EndTable()
+  dd.EndContent()
+
+
+
+[=== compare with pdfMake:
+var docDefinition = {
+  content: [
+    {
+      layout: 'lightHorizontalLines', // optional
+      table: {
+        // headers are automatically repeated if the table spans over multiple pages
+        // you can declare how many rows should be treated as headers
+        headerRows: 1,
+        widths: [ '*', 'auto', 100, '*' ],
+
+        body: [
+          [ 'First', 'Second', 'Third', 'The last one' ],
+          [ 'Value 1', 'Value 2', 'Value 3', 'Value 4' ],
+          [ { text: 'Bold value', bold: true }, 'Val 2', 'Val 3', 'Val 4' ]
+        ]
+      }
+    }
+  ]
+};
+===]

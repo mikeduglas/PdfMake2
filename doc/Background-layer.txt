@@ -1,0 +1,22 @@
+Background-layer
+
+The background-layer will be added on every page.
+
+dd   TDocDefinition
+
+  dd.AddGlobalProperty('background', '"simple text"')
+
+  dd.BeginContent()
+  ...
+  dd.EndContent()
+
+
+[=== compare with pdfMake:
+var docDefinition = {
+  background: 'simple text',
+
+  content: (...)
+};
+===]
+
+It may contain any other object as well (images, tables, ...).

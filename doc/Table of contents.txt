@@ -1,0 +1,30 @@
+Table of contents
+
+  dd.BeginContent()
+
+   dd.BeginTOC()
+    dd.AddText('INDEX', '"style": "header"')
+   dd.EndTOC()
+
+   dd.AddText('This is a header', '"style": "header", "tocItem": true')
+
+  dd.EndContent()
+
+
+[=== compare with pdfmake:
+var docDefinition = {
+  content: [
+    {
+      toc: {
+        title: {text: 'INDEX', style: 'header'}
+      }
+    },
+    {
+      text: 'This is a header',
+      style: 'header',
+      tocItem: true, // or tocItem: 'mainToc' if is used id in toc
+      // or tocItem: ['mainToc', 'subToc'] for multiple tocs
+    }
+  ]
+}
+===]

@@ -1,0 +1,107 @@
+﻿<!DOCTYPE HMTL>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <script type="text/javascript" src=".\pdfmake.min.js"></script>
+  <script type="text/javascript" src=".\vfs_fonts.js"></script>
+  <script type="text/javascript">
+
+function fnGetPDF(dd) {
+//  console.log(dd);
+
+  // async'd host object
+  const bridge = chrome.webview.hostObjects.bridge;
+  
+  try {
+    var docDefinition = JSON.parse(dd);
+  } catch (e) {
+    console.log(e.message);
+    bridge.SendEvent("error", e.message);
+    return;
+  };
+  
+  if (docDefinition.footer == null) {
+    docDefinition.footer = getFooter;
+  };
+      
+  if (docDefinition.header == null) {
+      docDefinition.header = getHeader;
+  };
+
+//  pdfMake.fonts = {
+//          Arial: {
+//                  normal: 'arial.ttf',
+//                  bold: 'arialbd.ttf',
+//                  italics: 'ariali.ttf',
+//                  bolditalics: 'arialbi.ttf'
+//          }
+//  };
+//  docDefinition.defaultStyle = {
+//    font: 'Arial'
+//  };
+
+  try {
+    pdfMake.createPdf(docDefinition).getBase64(function (b64) {
+    bridge.SendEvent("makepdf", b64);
+    });
+  } catch (e) {
+    console.log(e.message);
+    bridge.SendEvent("error", e.message);
+    return;
+  }
+}
+
+function getHeader(currentPage, pageCount, pageSize) {
+  // sync'd host object
+  const bridge = chrome.webview.hostObjects.sync.bridge;
+  var str = bridge.SendEvent("header", currentPage.toString(), pageCount.toString(), pageSize.width.toString(), pageSize.height.toString());
+  try {
+    return JSON.parse(str); // object
+  } catch (e) {
+    return str;             // text
+  };
+}
+// sample getHeader
+//function getHeader(currentPage, pageCount, pageSize) {
+//  var style = {};
+//  style.text = "Students";
+//  style.alignment = "center";
+//  style.fontSize = 16;
+//  return style;
+//}
+
+function getFooter(currentPage, pageCount) {
+  // sync'd host object
+  const bridge = chrome.webview.hostObjects.sync.bridge;
+  var str = bridge.SendEvent("footer", currentPage.toString(), pageCount.toString());
+  try {
+    return JSON.parse(str); // object
+  } catch (e) {
+    return str;             // text
+  };
+}
+// sample getFooter
+//function getFooter(currentPage, pageCount) {
+//  var today = new Date();
+//  
+//  var columns = [{ 
+//      text: "Printed " + today.toLocaleDateString() + " " + today.toLocaleTimeString(), 
+//      alignment: "left", /* by default */
+//      fontSize: 10, 
+//      margin: [40, 0]
+//    },{ 
+//      text: "Page " + currentPage.toString() + "/" + pageCount.toString(), 
+//      alignment: "right", 
+//      fontSize: 10, 
+//      margin: [20, 0]
+//    }];
+//    
+//  var style = {};
+//  style.columns = columns;
+//  return style;
+//}
+  </script>
+</head>
+<body>
+</body>
+</html>

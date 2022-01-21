@@ -1,0 +1,31 @@
+Getting Started:
+- folder %CWRoot\accessory\PdfMake2\ must exist.
+
+Global settings:
+- Add Easy Edge (Chromium) global extension.
+- Add Plugin PdfMake2 global extension under "Easy Edge (Chromium)".
+- You can change default page header, page footer and viewer options.
+
+Procedure settings:
+- Add new WINDOW procedure.  
+- Enter WINDOW designer and add Easy Edge Web Browser control to view PDF contents, change instance variable name to "pdfViewer", other settings leave defaults.  
+- Add PDFMake2 extension, leave default instance name "pdfMaker".
+- Set Viewer variable name as pdfViewer, other settings leave defaults.
+- You can change page header, page footer and viewer options.
+
+In Embed tree, Local Data|Other Declarations, declare a procedure which makes a PDF:
+  MAP
+    MakePdf::HelloWorld()
+  END
+
+In Embed tree, Local Procedures, define that procedure:
+MakePdf::HelloWorld  PROCEDURE()
+dd                   TDocDefinition2
+  CODE
+  dd.BeginContent()
+  dd.AddText('Hello world!')
+  dd.EndContent()
+  pdfMaker.MakePdf(dd)
+
+Compile and Run.
+

@@ -1,0 +1,258 @@
+#EXTENSION(gPdfMake2,'Plugin PdfMake2 for Easy Edge (Chromium)'),APPLICATION,REQ(EasyEdgeGlobalExt(EasyEdge))
+#! --------------------------------------------------------------------------
+#! #prompts for C10: AT(100,,260)
+#SHEET
+  #TAB('General')
+    #BOXED('Plugin "PdfMake2" for Easy Edge (Chromium)')
+      #DISPLAY
+      #BOXED('')
+        #DISPLAY('PdfMake2                  Version 1.00')
+        #DISPLAY('')
+        #DISPLAY('Mike Duglas')
+        #DISPLAY('Copyright © 2022 All Rights Reserved')
+      #ENDBOXED
+      #DISPLAY
+      #PROMPT('pdfMake path:',@s255),%pdfGloHtml,DEFAULT('.\PdfMake2\PDFMake2.html'),REQ
+    #ENDBOXED
+  #ENDTAB
+  #TAB('Page header')
+    #PROMPT('Alignment:',@s255),%pdfGloHeaderAlignment,DEFAULT('center')
+    #PROMPT('FontSize:',@s255),%pdfGloHeaderFontSize,DEFAULT('16')
+  #ENDTAB
+  #TAB('Page footer')
+    #BOXED('Timestamp')
+      #PROMPT('"Printed" text:',@s255),%pdfGloFooterPrintedText,DEFAULT('Printed')
+      #PROMPT('Timestamp:',@s255),%pdfGloFooterPrintedTimestamp,DEFAULT('FORMAT(TODAY(), @d17) &'' ''& FORMAT(CLOCK(), @t7)')
+      #PROMPT('Alignment:',@s255),%pdfGloFooterPrintedAlignment,DEFAULT('left')
+      #PROMPT('FontSize:',@s255),%pdfGloFooterPrintedFontSize,DEFAULT('10')
+      #PROMPT('Margin:',@s255),%pdfGloFooterPrintedMargin,DEFAULT('[40, 0]')
+    #ENDBOXED
+    #BOXED('Page number')
+      #PROMPT('"Page" text:',@s255),%pdfGloFooterPageText,DEFAULT('Page')
+      #PROMPT('Alignment:',@s255),%pdfGloFooterPageAlignment,DEFAULT('right')
+      #PROMPT('FontSize:',@s255),%pdfGloFooterPageFontSize,DEFAULT('10')
+      #PROMPT('Margin:',@s255),%pdfGloFooterPageMargin,DEFAULT('[20, 0]')
+    #ENDBOXED
+  #ENDTAB
+  #TAB('Viewer options')
+    #PROMPT('Default wait message:', @s255),%pdfGloWaitMessage,DEFAULT('Please wait...')
+    #PROMPT('Default error pattern:', @s255),%pdfGloErrorPattern,DEFAULT('<<p style="color: red; font-size: 16px;">%s<</p>')
+  #ENDTAB
+#ENDSHEET
+#! --------------------------------------------------------------------------
+#AT(%AfterGlobalIncludes)
+  INCLUDE('PdfMake2.inc'), ONCE        #<! Added by PdfMake2 template
+  INCLUDE('PdfDocDef2.inc'), ONCE      #<! Added by PdfMake2 template
+#ENDAT
+#! --------------------------------------------------------------------------
+#AT(%CustomGlobalDeclarations)
+  #CALL(%CopyPdfMakeFiles)
+#ENDAT
+#! --------------------------------------------------------------------------
+#! --------------------------------------------------------------------------
+#! --------------------------------------------------------------------------
+#EXTENSION(pPdfMake2,'PdfMake2 instance'),PROCEDURE,REQ(gPdfMake2),DESCRIPTION('PdfMake2 '& %pdf)
+#SHEET
+  #TAB('General')
+    #PROMPT('Instance variable:',@s20),%pdf,DEFAULT('pdfMaker'),REQ
+    #DISPLAY('')
+    #PROMPT('pdfMake path:',OPENDIALOG('Pick file', 'HTML files|*.html|All files|*.*')),%pdfHtml,DEFAULT(%pdfGloHtml),REQ
+    #DISPLAY('')
+    #DISPLAY('Leave it blank to generate random name.')
+    #PROMPT('Output PDF file:',OPENDIALOG('Pick file', 'PDF files|*.pdf|All files|*.*')),%pdfPdf,DEFAULT('')
+    #DISPLAY('')
+    #BOXED('Viewer')
+      #DISPLAY('Enter variable name of Easy Edge instance,')
+      #DISPLAY('or leave it blank if viewer is not required.')
+      #PROMPT('Viewer variable name:',@s32),%pdfViewer
+    #ENDBOXED
+  #ENDTAB
+  #TAB('Page header')
+    #PROMPT('Enabled',CHECK),%pdfHeaderEnabled,DEFAULT(%True),AT(10)
+    #ENABLE(%pdfHeaderEnabled)
+      #PROMPT('Header text:',@s255),%pdfHeaderText,DEFAULT(%Procedure)
+      #PROMPT('Alignment:',@s255),%pdfHeaderAlignment,DEFAULT(%pdfGloHeaderAlignment)
+      #PROMPT('FontSize:',@s255),%pdfHeaderFontSize,DEFAULT(%pdfGloHeaderFontSize)
+    #ENDENABLE
+  #ENDTAB
+  #TAB('Page footer')
+    #PROMPT('Enabled',CHECK),%pdfFooterEnabled,DEFAULT(%True),AT(10)
+    #ENABLE(%pdfFooterEnabled)
+      #BOXED('Timestamp')
+        #PROMPT('"Printed" text:',@s255),%pdfFooterPrintedText,DEFAULT(%pdfGloFooterPrintedText)
+        #PROMPT('Timestamp:',@s255),%pdfFooterPrintedTimestamp,DEFAULT(%pdfGloFooterPrintedTimestamp)
+        #PROMPT('Alignment:',@s255),%pdfFooterPrintedAlignment,DEFAULT(%pdfGloFooterPrintedAlignment)
+        #PROMPT('FontSize:',@s255),%pdfFooterPrintedFontSize,DEFAULT(%pdfGloFooterPrintedFontSize)
+        #PROMPT('Margin:',@s255),%pdfFooterPrintedMargin,DEFAULT(%pdfGloFooterPrintedMargin)
+      #ENDBOXED
+      #BOXED('Page number')
+        #PROMPT('"Page" text:',@s255),%pdfFooterPageText,DEFAULT(%pdfGloFooterPageText)
+        #PROMPT('Alignment:',@s255),%pdfFooterPageAlignment,DEFAULT(%pdfGloFooterPageAlignment)
+        #PROMPT('FontSize:',@s255),%pdfFooterPageFontSize,DEFAULT(%pdfGloFooterPageFontSize)
+        #PROMPT('Margin:',@s255),%pdfFooterPageMargin,DEFAULT(%pdfGloFooterPageMargin)
+      #ENDBOXED
+    #ENDENABLE
+  #ENDTAB
+  #TAB('Viewer options'),WHERE(%pdfViewer)
+      #PROMPT('Wait message:', @s255),%pdfWaitMessage,DEFAULT(%pdfGloWaitMessage)
+      #PROMPT('Error pattern:', @s255),%pdfErrorPattern,DEFAULT(%pdfGloErrorPattern)
+  #ENDTAB
+#ENDSHEET
+#! --------------------------------------------------------------------------
+#ATSTART
+  #EQUATE(%EmbedRoot,'PdfMake2|'&%pdf&'|')
+#ENDAT
+#! --------------------------------------------------------------------------
+#AT(%ProcessedCode), PRIORITY(9901), WHERE(%ProcedureTemplate = 'SOURCE'), DESCRIPTION(%pdf &' initialization')
+IF %pdf.Init()
+  %pdf.Load(%(%GetOptFieldValue(%pdfHtml)))
+END
+#ENDAT
+#! --------------------------------------------------------------------------
+#AT(%WindowManagerMethodCodeSection,'Init','(),BYTE'), PRIORITY(9901), WHERE(UPPER(%ModuleTemplate)='GENERATED(ABC)' AND %ProcedureTemplate <> 'SOURCE'), DESCRIPTION(%pdf &' initialization')
+IF %pdf.Init()
+  %pdf.Load(%(%GetOptFieldValue(%pdfHtml)))
+ELSE
+  RETURN Level:Fatal
+END
+#ENDAT
+#! --------------------------------------------------------------------------
+#AT(%AfterControlsSetup), PRIORITY(9901), WHERE(UPPER(%ModuleTemplate)<>'GENERATED(ABC)' AND %ProcedureTemplate <> 'SOURCE'), DESCRIPTION(%pdf &' initialization')
+IF %pdf.Init()
+  %pdf.Load(%(%GetOptFieldValue(%pdfHtml)))
+ELSE
+  DO ProcedureReturn
+END
+#ENDAT
+#! --------------------------------------------------------------------------
+#AT(%BeforeWindowClosing),FIRST,DESCRIPTION(%pdf &' clean up')
+%pdf.Kill()
+#ENDAT
+#! --------------------------------------------------------------------------
+#AT(%DataSection),DESCRIPTION('PdfMake2 instance')
+%[20]pdf CLASS(TPDFMake2)
+#EMBED(%ClassMembers, 'Class members'),%pdf,HIDE
+#EMBED(%ClassMethods, 'Class methods'),%pdf,HIDE
+Load                   PROCEDURE(STRING pHtmlFile), BOOL PROC, DERIVED
+MakePdf                PROCEDURE(STRING dd), DERIVED
+TakeResult             PROCEDURE(STRING pPdfContents), STRING, PROC, DERIVED, PROTECTED
+TakeError              PROCEDURE(STRING pErrMsg), STRING, PROC, DERIVED, PROTECTED
+PageHeader             PROCEDURE(LONG pCurrentPage, LONG pPageCount, LONG pPageWidth, LONG pPageHeight), STRING, DERIVED, PROTECTED
+PageFooter             PROCEDURE(LONG pCurrentPage, LONG pPageCount), STRING, DERIVED, PROTECTED
+#EMBED(%UserClassMembers,'PdfMake2 inside class declaration'),DATA,%pdf,TREE(%EmbedRoot&'Inside Class Declaration'&'{{COLOR('&%ColorDataSection&'),PRIORITY(1)}')
+%[20]NULL END
+#ENDAT
+#! --------------------------------------------------------------------------
+#AT(%LocalProcedures),LAST,DESCRIPTION('PdfMake2 methods')
+#! --------
+%[29](%pdf &'.Load') PROCEDURE(STRING pHtmlFile)
+#EMBED(%LoadData,'Load DATA'),DATA,%pdf,'Load DATA',TREE(%EmbedRoot&'Load|Data'&'{{COLOR('&%ColorDataSection&'),PRIORITY(1)}')
+  CODE
+  #IF(%pdfPdf)
+  !- set resulting pdf file name
+  SELF.PdfFile(%(%GetOptFieldValue(%pdfPdf)))
+  #ENDIF
+  #IF(%pdfViewer)
+  #EMBED(%LoadSetupViewer,'Load, Setup Viewer'),%pdf,'Load, Setup Viewer',TREE(%EmbedRoot&'Load|Setup Viewer'&'{{COLOR('&%ColorCodeSection&'),PRIORITY(100)}')
+  !- set pdf viewer
+  SELF.SetViewer(%pdfViewer)
+  !- set wait message
+  SELF.WaitMessage(%(%GetOptFieldValue(%pdfWaitMessage)))
+  !- set error pattern
+  SELF.ErrorPattern(%(%GetOptFieldValue(%pdfErrorPattern)))
+  #ENDIF
+  #EMBED(%LoadBeforeParent,'Load, Before Parent'),%pdf,'Load, Before Parent',TREE(%EmbedRoot&'Load|Before Parent'&'{{COLOR('&%ColorCodeSection&'),PRIORITY(120)}')
+  PARENT.Load(pHtmlFile)
+  #EMBED(%LoadAfterParent,'Load, After Parent'),%pdf,'Load, After Parent',TREE(%EmbedRoot&'Load|After Parent'&'{{COLOR('&%ColorCodeSection&'),PRIORITY(130)}')
+  RETURN SELF.IsLoaded()
+  
+#! --------
+%[29](%pdf &'.MakePdf') PROCEDURE(STRING dd)
+#EMBED(%MakePdf,'MakePdf DATA'),DATA,%pdf,'MakePdf DATA',TREE(%EmbedRoot&'MakePdf|Data'&'{{COLOR('&%ColorDataSection&'),PRIORITY(1)}')
+  CODE
+  #EMBED(%MakePdfBeforeParent,'MakePdf, Before Parent'),%pdf,'MakePdf, Before Parent',TREE(%EmbedRoot&'MakePdf|Before Parent'&'{{COLOR('&%ColorCodeSection&'),PRIORITY(100)}')
+  PARENT.MakePdf(dd)
+  #EMBED(%MakePdfAfterParent,'MakePdf, After Parent'),%pdf,'MakePdf, After Parent',TREE(%EmbedRoot&'MakePdf|After Parent'&'{{COLOR('&%ColorCodeSection&'),PRIORITY(200)}')
+  
+#! --------
+%[29](%pdf &'.TakeResult') PROCEDURE(STRING pPdfContents)
+#EMBED(%TakeResultData,'TakeResult DATA'),DATA,%pdf,'TakeResult DATA',TREE(%EmbedRoot&'TakeResult|Data'&'{{COLOR('&%ColorDataSection&'),PRIORITY(1)}')
+  CODE
+  #IF(%Window)
+  SETTARGET(%Window)
+  #ENDIF
+  #EMBED(%TakeResultCode,'TakeResult CODE'),%pdf,'TakeResult CODE',TREE(%EmbedRoot&'TakeResult|Code'&'{{COLOR('&%ColorCodeSection&'),PRIORITY(100)}')
+  RETURN PARENT.TakeResult(pPdfContents)
+  
+#! --------
+%[29](%pdf &'.TakeError') PROCEDURE(STRING pErrMsg)
+#EMBED(%TakeErrorData,'TakeError DATA'),DATA,%pdf,'TakeError DATA',TREE(%EmbedRoot&'TakeError|Data'&'{{COLOR('&%ColorDataSection&'),PRIORITY(1)}')
+  CODE
+  #IF(%Window)
+  SETTARGET(%Window)
+  #ENDIF
+  #EMBED(%TakeErrorCode,'TakeError CODE'),%pdf,'TakeError CODE',TREE(%EmbedRoot&'TakeError|Code'&'{{COLOR('&%ColorCodeSection&'),PRIORITY(100)}')
+  RETURN PARENT.TakeError(pErrMsg)
+    
+#! --------
+%[29](%pdf &'.PageHeader') PROCEDURE(LONG pCurrentPage, LONG pPageCount, LONG pPageWidth, LONG pPageHeight)
+#EMBED(%PageHeaderData,'PageHeader DATA'),DATA,%pdf,'PageHeader DATA',TREE(%EmbedRoot&'PageHeader|Data'&'{{COLOR('&%ColorDataSection&'),PRIORITY(1)}')
+  CODE
+  #EMBED(%PageHeaderCode,'PageHeader CODE'),%pdf,'PageHeader CODE',TREE(%EmbedRoot&'PageHeader|Code'&'{{COLOR('&%ColorCodeSection&'),PRIORITY(100)}')
+  #IF(%pdfHeaderEnabled)
+  RETURN '{{ "text": "%pdfHeaderText", "alignment": "%pdfHeaderAlignment", "fontSize": %pdfHeaderFontSize }'
+  #ELSE
+  RETURN PARENT.PageHeader(pCurrentPage, pPageCount, pPageWidth, pPageHeight)
+  #ENDIF
+    
+#! --------
+%[29](%pdf &'.PageFooter') PROCEDURE(LONG pCurrentPage, LONG pPageCount)
+#EMBED(%PageFooterData,'PageFooter DATA'),DATA,%pdf,'PageFooter DATA',TREE(%EmbedRoot&'PageFooter|Data'&'{{COLOR('&%ColorDataSection&'),PRIORITY(1)}')
+  CODE
+  #EMBED(%PageFooterCode,'PageFooter CODE'),%pdf,'PageFooter CODE',TREE(%EmbedRoot&'PageFooter|Code'&'{{COLOR('&%ColorCodeSection&'),PRIORITY(100)}')
+  #IF(%pdfFooterEnabled)  
+  RETURN '' |
+    &'{{"columns": [' |
+    &'  {{ "text": "%pdfFooterPrintedText '& %pdfFooterPrintedTimestamp &'", "fontSize": %pdfFooterPrintedFontSize, "margin": %pdfFooterPrintedMargin}, ' |
+    &'  {{ "text": "%pdfFooterPageText '& pCurrentPage &'/'& pPageCount &'", "alignment": "%pdfFooterPageAlignment", "fontSize": %pdfFooterPageFontSize, "margin": %pdfFooterPageMargin}' |
+    &']}'
+  #ELSE
+  RETURN PARENT.PageFooter(pCurrentPage, pPageCount)
+  #ENDIF
+
+#! --------
+#ENDAT
+#! --------------------------------------------------------------------------
+#GROUP(%CopyPdfMakeFiles), AUTO
+#!
+#DECLARE(%pdfMakeSrcFolder)
+#DECLARE(%pdfMakeDstFolder)
+#IF(%CWVersion >= 7000)
+  #SET(%pdfMakeSrcFolder, %CWRoot &'accessory\PdfMake2\')
+#ELSE
+  #SET(%pdfMakeSrcFolder, %CWRoot &'3rdParty\PdfMake2\')
+#ENDIF
+#SET(%pdfMakeDstFolder, CALL(%GetFolder, %Application & '.app') &'PdfMake2\')
+#!
+#RUN('cmd.exe /c xcopy "'& %pdfMakeSrcFolder &'*" "'& %pdfMakeDstFolder &'" /D /S /Y'),WAIT
+#! --------------------------------------------------------------------------
+#GROUP(%GetFolder, %pFileName)
+#DECLARE(%Folder)
+#DECLARE(%FolderPos, LONG)
+#!
+#SET(%Folder, FULLNAME(%pFileName))
+#LOOP,FOR(%FolderPos, LEN(%Folder), 1),BY(-1)
+  #IF(SUB(%Folder, %FolderPos, 1) = '\')
+    #RETURN(SUB(%Folder, 1, %FolderPos))
+  #ENDIF
+#ENDLOOP
+#RETURN('')
+#! --------------------------------------------------------------------------
+#! Return OPTFIELD value
+#! --------------------------------------------------------------------------
+#GROUP(%GetOptFieldValue,%pOptField),AUTO
+  #IF(SUB(%pOptField,1,1) = '!')
+    #RETURN(SUB(%pOptField, 2))
+  #ELSE
+    #RETURN(''''& %pOptField &'''')
+  #ENDIF

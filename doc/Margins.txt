@@ -1,0 +1,25 @@
+Margins
+
+Any element can have a margin:
+
+  ! margin: [left, top, right, bottom]
+  dd.AddText('sample', '"margin": [ 5, 2, 10, 20 ]')
+
+  ! margin: [horizontal, vertical]
+  dd.AddText('another text', '"margin": [ 5, 2 ]')
+
+  ! margin: equalLeftTopRightBottom
+  dd.AddText('last one', '"margin": 5')
+
+[=== compare with pdfmake:
+(...)
+// margin: [left, top, right, bottom]
+{ text: 'sample', margin: [ 5, 2, 10, 20 ] },
+
+// margin: [horizontal, vertical]
+{ text: 'another text', margin: [5, 2] },
+
+// margin: equalLeftTopRightBottom
+{ text: 'last one', margin: 5 }
+(...)
+===]

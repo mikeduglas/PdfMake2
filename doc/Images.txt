@@ -1,0 +1,26 @@
+Images
+
+This is simple. Just use the AddImage method.
+
+JPEG and PNG formats are supported.
+
+  dd.AddImage('sampleImage.jpg')
+
+  ! if you specify width, image will scale proportionally
+  dd.AddImage('sampleImage.jpg', '"width": 150')
+
+  ! if you specify both width and height - image will be stretched
+  dd.AddImage('sampleImage.jpg', '"width": 150, "height": 150')
+
+  ! you can also fit the image inside a rectangle
+  dd.AddImage('sampleImage.jpg', '"fit": [100, 100]')
+
+
+  ! you can reuse the same image in multiple nodes, to do this
+  ! you should put it to the images dictionary and reference it by name
+  dd.AddDctImage('myImage', 'sampleImage.jpg')
+
+  dd.AddImage('myImage')
+  dd.AddImage('myImage', '"width": 150')
+  dd.AddImage('myImage', '"width": 150, "height": 150')
+  dd.AddImage('myImage', '"fit": [100, 100]')

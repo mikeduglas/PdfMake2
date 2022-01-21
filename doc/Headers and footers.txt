@@ -1,0 +1,76 @@
+Headers and footers
+
+Page headers and footers can be: static or dynamic.
+
+They use the same syntax:
+
+  dd.PageHeader('simple text')
+  dd.PageFooter('"columns": ["Left part", {{ "text": "Right part", "alignment": "right" }]')
+
+
+[=== compare with pdfmake:
+var docDefinition = {
+  header: 'simple text',
+
+  footer: {
+    columns: [
+      'Left part',
+      { text: 'Right part', alignment: 'right' }
+    ]
+  },
+
+  content: (...)
+};
+===]
+
+
+For dynamically generated content (including page numbers, page count and page size) you can add javascript functions 
+getHeader and getFooter (before pdfMake2\PDFMake2.html loading):
+
+  !- page header function
+  sGetHeader = '' |
+    &'function getHeader(currentPage, pageCount, pageSize) {{' |
+    &'   var style = {{};' |
+    &'   style.text = "Students";' |
+    &'   style.alignment = "center";' |
+    &'   style.fontSize = 16;' |
+    &'   return style;' |
+    &'}'
+  SELF.AddScriptToExecuteOnCreate(sGetHeader)
+
+  !- page footer function
+  sGetFooter = '' |
+    &'function getFooter(currentPage, pageCount) {{' |
+    &'  var today = new Date();' |
+    &'  var columns = [{{' |
+    &'      text: "Printed " + today.toLocaleDateString() + " " + today.toLocaleTimeString(),' |
+    &'      alignment: "left",' |
+    &'      fontSize: 10,' |
+    &'      margin: [40, 0]' |
+    &'    },{{' |
+    &'      text: "Page " + currentPage.toString() + "/" + pageCount.toString(),' | 
+    &'      alignment: "right",' |
+    &'      fontSize: 10,' |
+    &'      margin: [20, 0]' |
+    &'    }];' |
+    &'  var style = {{};' |
+    &'  style.columns = columns;' |
+    &'  return style;' |
+    &'}'
+  SELF.AddScriptToExecuteOnCreate(sGetFooter)
+
+
+[=== compare with pdfmake:
+var docDefinition = {
+  footer: function(currentPage, pageCount) { return currentPage.toString() + ' of ' + pageCount; },
+  header: function(currentPage, pageCount, pageSize) {
+    // you can apply any logic and return any valid pdfmake element
+
+    return [
+      { text: 'simple text', alignment: (currentPage % 2) ? 'left' : 'right' },
+      { canvas: [ { type: 'rect', x: 170, y: 32, w: pageSize.width - 170, h: 40 } ] }
+    ]
+  },
+  (...)
+};
+===]

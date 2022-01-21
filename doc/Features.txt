@@ -1,0 +1,22 @@
+Features:
+
+line-wrapping,
+text-alignments (left, right, centered, justified),
+numbered and bulleted lists,
+tables and columns,
+auto/fixed/star-sized widths,
+col-spans and row-spans,
+headers automatically repeated in case of a page-break,
+images and vector graphics,
+QR codes,
+convenient styling and style inheritance,
+page headers and footers:
+access to current page number and page count,
+background-layer,
+page dimensions and orientations,
+margins,
+custom page breaks,
+font embedding,
+support for complex, multi-level (nested) structures,
+table of contents,
+setting of PDF metadata (e.g. author, subject).

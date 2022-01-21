@@ -1,0 +1,54 @@
+Lists
+
+PDFMake2 supports both numbered and bulleted lists:
+
+dd   TDocDefinition
+  dd.BeginContent()
+
+   dd.AddText('Bulleted list example:')
+
+   dd.BeginUnorderedList()
+    dd.AddText('Item 1')
+    dd.AddText('Item 2')
+    dd.AddText('Item 3')
+    dd.AddText('Item 4', '"bold": true')
+   dd.EndUnorderedList()
+
+   dd.AddText('Numbered list example:')
+
+   dd.BeginOrderedList()
+    dd.AddText('Item 1')
+    dd.AddText('Item 2')
+    dd.AddText('Item 3')
+   dd.EndOrderedList()
+
+  dd.EndContent()
+
+
+
+[=== compare with pdfMake:
+var docDefinition = {
+  content: [
+    'Bulleted list example:',
+    {
+      // to treat a paragraph as a bulleted list, set an array of items under the ul key
+      ul: [
+        'Item 1',
+        'Item 2',
+        'Item 3',
+        { text: 'Item 4', bold: true },
+      ]
+    },
+
+    'Numbered list example:',
+    {
+      // for numbered lists set the ol key
+      ol: [
+        'Item 1',
+        'Item 2',
+        'Item 3'
+      ]
+    }
+  ]
+};
+===]

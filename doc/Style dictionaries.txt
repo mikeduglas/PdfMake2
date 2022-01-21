@@ -1,0 +1,39 @@
+Style dictionaries
+
+It's also possible to define a dictionary of reusable styles:
+
+dd   TDocDefinition
+
+  dd.BeginContent()
+   dd.AddText('This is a header', '"style": "header"')
+   dd.AddText('No styling here, this is a standard paragraph')
+   dd.AddText('Another text', '"style": "anotherStyle"')
+   dd.AddText('Multiple styles applied', '"style": [ "header", "anotherStyle" ]')
+  dd.EndContent()
+
+  dd.AddStyle('header', '"fontSize": 22, "bold": true')
+  dd.AddStyle('anotherStyle', '"italics": true, "alignment": "right"')
+
+[=== compare with pdfmake:
+var docDefinition = {
+  content: [
+    { text: 'This is a header', style: 'header' },
+    'No styling here, this is a standard paragraph',
+    { text: 'Another text', style: 'anotherStyle' },
+    { text: 'Multiple styles applied', style: [ 'header', 'anotherStyle' ] }
+  ],
+
+  styles: {
+    header: {
+      fontSize: 22,
+      bold: true
+    },
+    anotherStyle: {
+      italics: true,
+      alignment: 'right'
+    }
+  }
+};
+===]
+
+To have a deeper understanding of styling, style inheritance and local-style-overrides check STYLES1 and STYLES2 examples.
