@@ -6,7 +6,7 @@
     #BOXED('Plugin "PdfMake2" for Easy Edge (Chromium)')
       #DISPLAY
       #BOXED('')
-        #DISPLAY('PdfMake2                  Version 1.00')
+        #DISPLAY('PdfMake2                  Version 1.01')
         #DISPLAY('')
         #DISPLAY('Mike Duglas')
         #DISPLAY('Copyright © 2022 All Rights Reserved')

@@ -1,6 +1,6 @@
 !* PDFMake2
-!* Easy Edge (Chromium) v1.04 and higher required.
-!* v01.00
+!* Easy Edge (Chromium) v1.06 and higher required.
+!* v01.01
 
   INCLUDE('claedge.inc'), ONCE
 
@@ -28,7 +28,8 @@ WaitCompleted                   PROCEDURE(LONG pTimeout=10), PROTECTED
 Init                            PROCEDURE(<STRING browserExecutableFolder>, | 
                                   <STRING userDataFolder>, | 
                                   <STRING language>, | 
-                                  <STRING additionalBrowserArguments>), BOOL, PROC, DERIVED
+                                  <STRING additionalBrowserArguments>, |
+                                  BOOL allowSingleSignOnUsingOSPrimaryAccount=FALSE), BOOL, PROC, DERIVED
 
 Kill                            PROCEDURE(), DERIVED
 
@@ -75,7 +76,7 @@ PageHeader                      PROCEDURE(LONG pCurrentPage, LONG pPageCount, LO
 PageFooter                      PROCEDURE(LONG pCurrentPage, LONG pPageCount), STRING, VIRTUAL, PROTECTED
 
 OnInitializationCompleted       PROCEDURE(), DERIVED, PROTECTED
-OnNavigationCompleted           PROCEDURE(BOOL pIsSuccess, CoreWebView2WebErrorStatus pWebErrorStatus), DERIVED, PROTECTED
+OnNavigationCompleted           PROCEDURE(STRING pNavigationId, BOOL pIsSuccess, CoreWebView2WebErrorStatus pWebErrorStatus), DERIVED, PROTECTED
 OnHostObjectEvent               PROCEDURE(STRING pObjectName, STRING pEventName, | 
                                   STRING pParam1, STRING pParam2, STRING pParam3, STRING pParam4, STRING pParam5, |
                                   STRING pParam6, STRING pParam7, STRING pParam8, STRING pParam9, STRING pParam10), STRING, DERIVED, PROTECTED

@@ -1,6 +1,6 @@
 !* PDFMake2
-!* Easy Edge (Chromium) v1.04 and higher required.
-!* v1.00
+!* Easy Edge (Chromium) v1.06 and higher required.
+!* v1.01
 
   MEMBER
 
@@ -60,13 +60,14 @@ w                               WINDOW
 
 
 TPDFMake2.Init           PROCEDURE(<STRING browserExecutableFolder>, | 
-                                <STRING userDataFolder>, | 
-                                <STRING language>, | 
-                                <STRING additionalBrowserArguments>)
+                          <STRING userDataFolder>, | 
+                          <STRING language>, | 
+                          <STRING additionalBrowserArguments>, |
+                          BOOL allowSingleSignOnUsingOSPrimaryAccount=FALSE)
   CODE
   SELF.bIsAsyncCompleted = FALSE
   
-  IF PARENT.Init(browserExecutableFolder, userDataFolder, language, additionalBrowserArguments)
+  IF PARENT.Init(browserExecutableFolder, userDataFolder, language, additionalBrowserArguments, allowSingleSignOnUsingOSPrimaryAccount)
     SELF.WaitCompleted()
     RETURN TRUE
   ELSE
@@ -213,7 +214,7 @@ TPDFMake2.OnInitializationCompleted  PROCEDURE()
 
   SELF.bIsAsyncCompleted = TRUE
 
-TPDFMake2.OnNavigationCompleted  PROCEDURE(BOOL pIsSuccess, CoreWebView2WebErrorStatus pWebErrorStatus)
+TPDFMake2.OnNavigationCompleted  PROCEDURE(STRING pNavigationId, BOOL pIsSuccess, CoreWebView2WebErrorStatus pWebErrorStatus)
   CODE
   SELF.bIsLoaded = pIsSuccess  
   SELF.bIsAsyncCompleted = TRUE
