@@ -6,7 +6,7 @@
     #BOXED('Plugin "PdfMake2" for Easy Edge (Chromium)')
       #DISPLAY
       #BOXED('')
-        #DISPLAY('PdfMake2                  Version 1.01')
+        #DISPLAY('PdfMake2                  Version 1.02')
         #DISPLAY('')
         #DISPLAY('Mike Duglas')
         #DISPLAY('Copyright © 2022 All Rights Reserved')
@@ -104,13 +104,13 @@
 #ENDAT
 #! --------------------------------------------------------------------------
 #AT(%ProcessedCode), PRIORITY(9901), WHERE(%ProcedureTemplate = 'SOURCE'), DESCRIPTION(%pdf &' initialization')
-IF %pdf.Init()
+IF %pdf.Init(pdfMaker_Env)
   %pdf.Load(%(%GetOptFieldValue(%pdfHtml)))
 END
 #ENDAT
 #! --------------------------------------------------------------------------
 #AT(%WindowManagerMethodCodeSection,'Init','(),BYTE'), PRIORITY(9901), WHERE(UPPER(%ModuleTemplate)='GENERATED(ABC)' AND %ProcedureTemplate <> 'SOURCE'), DESCRIPTION(%pdf &' initialization')
-IF %pdf.Init()
+IF %pdf.Init(pdfMaker_Env)
   %pdf.Load(%(%GetOptFieldValue(%pdfHtml)))
 ELSE
   RETURN Level:Fatal
@@ -118,7 +118,7 @@ END
 #ENDAT
 #! --------------------------------------------------------------------------
 #AT(%AfterControlsSetup), PRIORITY(9901), WHERE(UPPER(%ModuleTemplate)<>'GENERATED(ABC)' AND %ProcedureTemplate <> 'SOURCE'), DESCRIPTION(%pdf &' initialization')
-IF %pdf.Init()
+IF %pdf.Init(pdfMaker_Env)
   %pdf.Load(%(%GetOptFieldValue(%pdfHtml)))
 ELSE
   DO ProcedureReturn
@@ -130,6 +130,7 @@ END
 #ENDAT
 #! --------------------------------------------------------------------------
 #AT(%DataSection),DESCRIPTION('PdfMake2 instance')
+pdfMaker_Env        LIKE(TClaEdgeEnvironmentOptions)
 %[20]pdf CLASS(TPDFMake2)
 #EMBED(%ClassMembers, 'Class members'),%pdf,HIDE
 #EMBED(%ClassMethods, 'Class methods'),%pdf,HIDE

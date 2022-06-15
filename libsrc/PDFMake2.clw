@@ -59,15 +59,11 @@ w                               WINDOW
   SELF.bIsAsyncCompleted = FALSE
 
 
-TPDFMake2.Init           PROCEDURE(<STRING browserExecutableFolder>, | 
-                          <STRING userDataFolder>, | 
-                          <STRING language>, | 
-                          <STRING additionalBrowserArguments>, |
-                          BOOL allowSingleSignOnUsingOSPrimaryAccount=FALSE)
+TPDFMake2.Init           PROCEDURE(*TClaEdgeEnvironmentOptions pOptions)
   CODE
   SELF.bIsAsyncCompleted = FALSE
   
-  IF PARENT.Init(browserExecutableFolder, userDataFolder, language, additionalBrowserArguments, allowSingleSignOnUsingOSPrimaryAccount)
+  IF PARENT.Init(pOptions)
     SELF.WaitCompleted()
     RETURN TRUE
   ELSE
@@ -214,7 +210,7 @@ TPDFMake2.OnInitializationCompleted  PROCEDURE()
 
   SELF.bIsAsyncCompleted = TRUE
 
-TPDFMake2.OnNavigationCompleted  PROCEDURE(STRING pNavigationId, BOOL pIsSuccess, CoreWebView2WebErrorStatus pWebErrorStatus)
+TPDFMake2.OnNavigationCompleted  PROCEDURE(STRING pNavigationId, BOOL pIsSuccess, CoreWebView2WebErrorStatus pWebErrorStatus, LONG pHttpStatusCode)
   CODE
   SELF.bIsLoaded = pIsSuccess  
   SELF.bIsAsyncCompleted = TRUE
