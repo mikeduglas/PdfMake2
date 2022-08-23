@@ -4,7 +4,47 @@
   <meta charset="utf-8" />
   <script type="text/javascript" src=".\pdfmake.min.js"></script>
   <script type="text/javascript" src=".\vfs_fonts.js"></script>
+  <script type="text/javascript" src=".\html-to-pdfmake.js"></script>
   <script type="text/javascript">
+
+function fnHtmlToDD(html, options) {
+  // sync'd host object
+  const bridge = chrome.webview.hostObjects.sync.bridge;
+
+  try {
+    options = options ? JSON.parse(options) : {};
+    var htmlPDF = htmlToPdfmake(html, options.htmlStyles);
+
+    var dd = {
+      content: [
+        htmlPDF
+      ],
+      styles: options.styles,
+      info: options.info,
+      images: options.images
+    };
+
+    if (options.globals) {
+      for (var prop in options.globals) {
+        dd[prop] = options.globals[prop];
+      }
+    }
+
+  } catch (e) {
+    bridge.SendEvent("error", e.message);
+    return '';
+  }
+  return JSON.stringify(dd);
+};
+
+function fnHtmlToPdf(html, options) {
+  // sync'd host object
+  const bridge = chrome.webview.hostObjects.sync.bridge;
+
+  var dd = fnHtmlToDD(html, options);
+  bridge.SendEvent("htmltodd", dd);
+  fnGetPDF(dd, options);
+};
 
 function fnGetPDF(dd) {
 //  console.log(dd);

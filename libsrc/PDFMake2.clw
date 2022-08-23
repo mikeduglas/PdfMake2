@@ -1,6 +1,6 @@
 !* PDFMake2
 !* Easy Edge (Chromium) v1.06 and higher required.
-!* v1.01
+!* v1.03
 
   MEMBER
 
@@ -161,6 +161,18 @@ TPDFMake2.MakePdf        PROCEDURE(STRING dd)
     SELF.TakeError('Call Load() first.')
   END
 
+TPDFMake2.MakePdfFromHtml     PROCEDURE(STRING pHtml)
+  CODE
+  IF SELF.IsLoaded()
+    !- display "Wait a minute...' message
+    SELF.DisplayMessage(SELF.sWaitMessage)
+    !- execute fnHtmlToPdf script
+!    SELF.ExecuteScriptAsync(printf('fnHtmlToPdf(%S)', pHtml))
+    SELF.ExecuteScriptAsync(printf('fnHtmlToPdf(`%s`)', pHtml))
+  ELSE
+    SELF.TakeError('Call Load() first.')
+  END
+
 TPDFMake2.TakeResult     PROCEDURE(STRING pPdfContents)
 sPdfFile                        STRING(256), AUTO
 tf                              TTempFile
@@ -195,6 +207,10 @@ TPDFMake2.TakeError      PROCEDURE(STRING pErrMsg)
   SELF.DisplayMessage(SELF.sErrorPattern, pErrMsg)
   RETURN ''
   
+TPDFMake2.TakeDD              PROCEDURE(STRING pDocDef)
+  CODE
+  RETURN ''
+
 TPDFMake2.PageHeader     PROCEDURE(LONG pCurrentPage, LONG pPageCount, LONG pPageWidth, LONG pPageHeight)
   CODE
   RETURN ''
@@ -230,6 +246,8 @@ TPDFMake2.OnHostObjectEvent  PROCEDURE(STRING pObjectName, STRING pEventName, |
       RETURN SELF.PageHeader(pParam1, pParam2, pParam3, pParam4)
     OF 'footer'
       RETURN SELF.PageFooter(pParam1, pParam2)
+    OF 'htmltodd'
+      RETURN SELF.TakeDD(pParam1)
     ELSE
       printd('OnHostObjectEvent(%S, %S): unknown event.', pObjectName, pEventName)
     END

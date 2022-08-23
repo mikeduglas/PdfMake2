@@ -33,10 +33,12 @@ Forget about manual x, y calculations. Declare document structure and let pdfmak
   - custom page breaks
   - font embedding
   - support for complex, multi-level (nested) structures
+- HTML to PDF conversion
+  - yes
 
 ### Demo application
 
-### Requirements for version 1.02
+### Requirements for version 1.03
 - Clarion 6.3 and newer (ABC and Legacy)
 - Easy Edge (Chromium) v1.09 and newer
 - Windows 11, 10, 8, 7

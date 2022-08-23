@@ -6,7 +6,7 @@
     #BOXED('Plugin "PdfMake2" for Easy Edge (Chromium)')
       #DISPLAY
       #BOXED('')
-        #DISPLAY('PdfMake2                  Version 1.02')
+        #DISPLAY('PdfMake2                  Version 1.03')
         #DISPLAY('')
         #DISPLAY('Mike Duglas')
         #DISPLAY('Copyright © 2022 All Rights Reserved')
@@ -138,6 +138,7 @@ Load                   PROCEDURE(STRING pHtmlFile), BOOL PROC, DERIVED
 MakePdf                PROCEDURE(STRING dd), DERIVED
 TakeResult             PROCEDURE(STRING pPdfContents), STRING, PROC, DERIVED, PROTECTED
 TakeError              PROCEDURE(STRING pErrMsg), STRING, PROC, DERIVED, PROTECTED
+TakeDD                 PROCEDURE(STRING pDocDef), STRING, PROC, DERIVED, PROTECTED
 PageHeader             PROCEDURE(LONG pCurrentPage, LONG pPageCount, LONG pPageWidth, LONG pPageHeight), STRING, DERIVED, PROTECTED
 PageFooter             PROCEDURE(LONG pCurrentPage, LONG pPageCount), STRING, DERIVED, PROTECTED
 #EMBED(%UserClassMembers,'PdfMake2 inside class declaration'),DATA,%pdf,TREE(%EmbedRoot&'Inside Class Declaration'&'{{COLOR('&%ColorDataSection&'),PRIORITY(1)}')
@@ -182,8 +183,10 @@ PageFooter             PROCEDURE(LONG pCurrentPage, LONG pPageCount), STRING, DE
   #IF(%Window)
   SETTARGET(%Window)
   #ENDIF
-  #EMBED(%TakeResultCode,'TakeResult CODE'),%pdf,'TakeResult CODE',TREE(%EmbedRoot&'TakeResult|Code'&'{{COLOR('&%ColorCodeSection&'),PRIORITY(100)}')
-  RETURN PARENT.TakeResult(pPdfContents)
+  #EMBED(%TakeResultCode,'TakeResult CODE'),%pdf,'TakeResult CODE',TREE(%EmbedRoot&'TakeResult|Before PARENT'&'{{COLOR('&%ColorCodeSection&'),PRIORITY(100)}')
+  PARENT.TakeResult(pPdfContents)
+  #EMBED(%TakeResultCode2,'TakeResult CODE2'),%pdf,'TakeResult CODE2',TREE(%EmbedRoot&'TakeResult|After PARENT'&'{{COLOR('&%ColorCodeSection&'),PRIORITY(100)}')
+  RETURN ''
   
 #! --------
 %[29](%pdf &'.TakeError') PROCEDURE(STRING pErrMsg)
@@ -194,7 +197,14 @@ PageFooter             PROCEDURE(LONG pCurrentPage, LONG pPageCount), STRING, DE
   #ENDIF
   #EMBED(%TakeErrorCode,'TakeError CODE'),%pdf,'TakeError CODE',TREE(%EmbedRoot&'TakeError|Code'&'{{COLOR('&%ColorCodeSection&'),PRIORITY(100)}')
   RETURN PARENT.TakeError(pErrMsg)
-    
+      
+#! --------
+%[29](%pdf &'.TakeDD') PROCEDURE(STRING pDocDef)
+#EMBED(%TakeDDData,'TakeDD DATA'),DATA,%pdf,'TakeDD DATA',TREE(%EmbedRoot&'TakeDD|Data'&'{{COLOR('&%ColorDataSection&'),PRIORITY(1)}')
+  CODE
+  #EMBED(%TakeDDCode,'TakeDD CODE'),%pdf,'TakeDD CODE',TREE(%EmbedRoot&'TakeDD|Code'&'{{COLOR('&%ColorCodeSection&'),PRIORITY(100)}')
+  RETURN PARENT.TakeDD(pDocDef)
+
 #! --------
 %[29](%pdf &'.PageHeader') PROCEDURE(LONG pCurrentPage, LONG pPageCount, LONG pPageWidth, LONG pPageHeight)
 #EMBED(%PageHeaderData,'PageHeader DATA'),DATA,%pdf,'PageHeader DATA',TREE(%EmbedRoot&'PageHeader|Data'&'{{COLOR('&%ColorDataSection&'),PRIORITY(1)}')
