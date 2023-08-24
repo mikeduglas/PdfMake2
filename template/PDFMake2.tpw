@@ -6,10 +6,10 @@
     #BOXED('Plugin "PdfMake2" for Easy Edge (Chromium)')
       #DISPLAY
       #BOXED('')
-        #DISPLAY('PdfMake2                  Version 1.03')
+        #DISPLAY('PdfMake2                  Version 1.04')
         #DISPLAY('')
         #DISPLAY('Mike Duglas')
-        #DISPLAY('Copyright © 2022 All Rights Reserved')
+        #DISPLAY('Copyright © 2023 All Rights Reserved')
       #ENDBOXED
       #DISPLAY
       #PROMPT('pdfMake path:',@s255),%pdfGloHtml,DEFAULT('.\PdfMake2\PDFMake2.html'),REQ
@@ -65,6 +65,7 @@
       #DISPLAY('Enter variable name of Easy Edge instance,')
       #DISPLAY('or leave it blank if viewer is not required.')
       #PROMPT('Viewer variable name:',@s32),%pdfViewer
+      #PROMPT('Share viewer environment',CHECK),%pdfShareViewerEnv,AT(10)
     #ENDBOXED
   #ENDTAB
   #TAB('Page header')
@@ -130,7 +131,11 @@ END
 #ENDAT
 #! --------------------------------------------------------------------------
 #AT(%DataSection),DESCRIPTION('PdfMake2 instance')
+#IF(%pdfViewer AND %pdfShareViewerEnv)
+pdfMaker_Env        LIKE(TClaEdgeEnvironmentOptions),OVER(%pdfViewer_env)
+#ELSE
 pdfMaker_Env        LIKE(TClaEdgeEnvironmentOptions)
+#ENDIF
 %[20]pdf CLASS(TPDFMake2)
 #EMBED(%ClassMembers, 'Class members'),%pdf,HIDE
 #EMBED(%ClassMethods, 'Class methods'),%pdf,HIDE
