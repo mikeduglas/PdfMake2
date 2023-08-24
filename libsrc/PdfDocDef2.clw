@@ -112,7 +112,7 @@ EscapeJSON                    PROCEDURE(DynStr this, BOOL pUseChromium)
     this.Replace('<09h>', '\t')
     this.Replace('<0Dh,0Ah>', '\n')
     this.Replace('<0Ah>', '\n')
-    this.Replace('<0Dh', '\r')
+    this.Replace('<0Dh>', '\r')
   ELSE
     !- Chromium
     this.Replace('\', '\\')
@@ -122,7 +122,7 @@ EscapeJSON                    PROCEDURE(DynStr this, BOOL pUseChromium)
     this.Replace('<09h>', '\\t')
     this.Replace('<0Dh,0Ah>', '\\n')
     this.Replace('<0Ah>', '\\n')
-    this.Replace('<0Dh', '\\r')
+    this.Replace('<0Dh>', '\\r')
   END
   
 GetImageFormat                PROCEDURE(*STRING pImageData)
