@@ -40,7 +40,7 @@ Forget about manual x, y calculations. Declare document structure and let pdfmak
 
 ### Requirements for version 1.03
 - Clarion 6.3 and newer (ABC and Legacy)
-- Easy Edge (Chromium) v1.09 and newer
+- Easy Edge (Chromium) v2.0 and newer
 - Windows 11, 10, 8, 7
 - .NET v4.6.2 and newer
 
